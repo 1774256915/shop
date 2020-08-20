@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>商城详情3页</title>
+    <link href="/static/qiantai/css/iconfont/iconfont.css" rel="stylesheet"/>
+    <link href="/static/qiantai/css/common.css" rel="stylesheet"/>
+    <link href="/static/qiantai/css/goods-detail.css" rel="stylesheet"/>
+ <link rel="stylesheet" href="/static/layui/css/layui.css"></link>
+    <script src="/static/qiantai/js/jquery.js"></script>
+    <script src="/static/layui/layui.js"></script>
+<script src="/static/js/verify.js"></script>
+<script th:inline="javascript">
+/*<![CDATA[*/  
+layui.use(['element','form'], function(){
+	  var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+	  var $ = layui.jquery; // 使用jquery
+});
+	function buy(){
+
+					layer.msg("商品已下架");
+
+ }
+	/*]]>*/
+</script>
+
+</head>
+<body>
+    <!--头部-->
+        <div th:include="common/head::#h"></div>
+        <div class="shop-header wrapper">
+            <div class="shop-schbox">
+                <div class="layout">
+                <form action="/product/search" method="post">
+						<div class="search-switch">
+							<i class="arrow"></i>
+							<div class="item">商品</div>
+						</div>
+						  <input class="search-txt" id="keyword" name="keyword" placeholder="搜流行宝贝" />
+                        <button class="search-btn site" type="submit">搜全站</button>
+						<div class="suggest-box">
+							<div class="item" data-title="上衣 短款 短袖">
+								上衣 短款 短袖
+								<div class="tags">
+									<span>雪纺</span><span>蕾丝</span><span>一字领</span>
+								</div>
+							</div>
+						</div>
+					</form>
+                      
+                </div>
+            </div>
+        </div>
+        <div class="shop-nav-box">
+            <div class="shop-nav wrapper">
+                <div class="shop-nav-all">
+                  
+                </div>
+                <ul class="shop-nav-rec" style="background: #F63F31;">
+                    <li><a href="/">首页</a></li>
+                    
+                    <li  th:each="brand:${brandList}">
+                    <a href="" th:text="${brand.brandName}"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    <!--头部-->
+
+    <div class="wrapper">
+        <div class="detail-top clearfix">
+            <div class="detail-goods">
+                <div class="detail-show">
+                    <div class="origin-show">
+                        <div class="zoomup"></div>
+                        <img class="big-pic" th:src="${product.productImage}" alt="" />
+                    </div>
+                    <div class="zoom-show">
+                        <img src="" alt="" />
+                    </div>
+                </div>
+                <form action="/order/saveOrderSingle" id="f" method="post">
+                <div class="detail-info">
+                    <input type="hidden" id="id" name="id" th:value="${product.id}"/>
+                    <div class="item-title" th:text="${product.productTitle}"></div>
+                    <div class="item-price">
+                        <span class="now" th:text="${'￥'+product.productPrice}">￥49.00</span><span class="dft" th:text="${product.productPrice}">￥69.00</span>
+                    </div>
+                    <ul class="item-data clearfix">
+                        <li class="col-4">销量&nbsp;&nbsp;&nbsp;<span th:text="${product.sale}"></span></li>
+                    </ul>
+                    <div class="sku-info">
+                       
+                        <div class="prop">
+                            <div class="dt">数量：</div>
+                            <div class="dd">
+                                <div class="mod-numbox chose-num" data-max="30">
+                                    <span class="count-minus"></span>
+                                    <input class="count-input" value="1"  type="text" id="num" name="num" />
+                                    <span class="count-plus" onclick="kc()"></span>
+                                </div>
+                              <span >库存：</span><span th:text="${product.totalCount}-${product.currentCount}"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-action">
+                  
+                      <a href="javascript:;" class="buy-now" onclick="buy()">立即购买</a>
+                        <a href="javascript:;" class="add-cart" onclick="addCart()">加入购物车</a>
+                    </div>
+                    <div class="item-extend">
+                        <!-- <a href="" class="fav"><i class="iconfont icon-star"></i>收藏</a> -->
+                        <a href="" class="fav">已收藏</a>
+                        <a href="" class="share"><i class="iconfont icon-fenxiang"></i>分享</a>
+                    </div>
+                </div>
+                 </form>
+            </div>
+         
+        </div>
+        <!-- 商品推荐 -->
+        <div class="ui-tabs">
+            <span class="item active">推荐</span>
+        </div>
+        <ul class="detail-rec clearfix" >
+            <li th:each="p:${productTjList}">
+               <a th:href="'/product/'+${p.id}+'.html'" class="figure"> <img th:src="${p.productImage}" alt="" /></a>
+                <div class="name"><a href="" th:text="${#strings.length(p.productTitle)}>16?${#strings.substring(p.productTitle,0,16)}:${p.productTitle}"></a></div>
+                <div class="price" th:text="${'¥'+p.productPrice}"></div>
+            </li>
+        </ul>
+        <!-- 商品推荐 -->
+
+        <div class="detail-bottom clearfix">
+             <div class="detail-main">
+                <div class="detail-tabs">
+                    <a class="item" href="javascript:;">详情描述</a>
+                    <a class="item" href="javascript:;">规格参数</a>
+                    <a class="item" href="javascript:;">商品评价</a>
+                </div>
+                <div class="tab-con">
+                  
+                </div>
+                <div class="tab-con">
+                    <div class="detail-stand">
+                        <div class="tit">主体规格参数</div>
+                        <div class="attr">
+                            <div class="name">品牌</div>
+                            <div class="value" th:text="${product.brand.brandName}"></div>
+                        </div>
+                        <div class="attr">
+                            <div class="name">种类</div>
+                            <div class="value" th:text="${product.productType.name}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-con">
+                    <div class="detail-pj">
+                        <div class="detail-pj-nav list clearfix">
+                            <div class="col col1">评价心得</div>
+                            <div class="col col2">满意度</div>
+                            <div class="col col3"></div>
+                            <div class="col col4">评价用户</div>
+                             <div class="col col4">评价用户</div>
+                        </div>
+                        <div class="detail-pj-cont">
+                            <div class="reply list clearfix" th:each="c:${commentList}">
+                                <div class="col col1" th:text="${c.content}"></div><span class="time" th:text="${#dates.format(c.commentDate,'yyyy-MM-dd')}"></span>
+                                <div class="col col2">[好评]</div>
+                                <div class="col col3">&nbsp;</div>
+                                <div class="col col4"><img class="hdpic" width="40" height="40"  th:src="${product.productImage}"></img><div>糖果</div></div>
+                           <div class="col col3">&nbsp;</div>
+                            </div>
+                        </div>
+                        <div class="pages mb30">
+                            <a class="prev" href="">上一页</a>
+                            <a href="">1</a>
+                            <span>2</span>
+                            <a href="">3</a>
+                            <a href="">4</a>
+                            <i>...</i>
+                            <a href="">71</a>
+                            <a class="next" href="">下一页</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="detail-aside">
+                <div class="detail-aside-box">
+                    <div class="big-tit">热销商品</div>
+                    <ul class="detail-hot">
+                        <li th:each="p:${productSaleList}">
+                            	 <a th:href="'/product/'+${p.id}+'.html'" class="figure"> <img th:src="${p.productImage}" alt="" /></a>
+                            <div class="name"><a href=""  th:text="${p.productTitle}"></a></div>
+                            <div class="price">
+                                <span class="now"  th:text="${'¥'+p.productPrice}"></span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--脚部-->
+   <div th:include="common/foot::#f"></div>
+    <!--脚部-->
+</body>
+
+<link rel="stylesheet" href="/static/qiantai/js/slick/slick.css"/>
+<script src="/static/qiantai/js/slick/slick.min.js"></script>
+<script src="/static/qiantai/js/global.js"></script>
+<script th:inline="javascript">
+	/*<![CDATA[*/  
+		
+	   /*商品数量操作*/
+    function goodsCount(o){
+            if(!(o instanceof Object)) var o={};
+            var inputCell = o.inputCell || ".count-input",
+                minusCell = o.minusCell || ".count-minus",
+                plusCell = o.plusCell || ".count-plus",
+                disClass = o.disClass || "disabled";
+            return this.each(function(){
+                var $wrap = $(this),
+                    $input = $(inputCell,$wrap),
+                    $minus = $(minusCell,$wrap),
+                    $plus = $(plusCell,$wrap),
+                    maxnum=parseInt($wrap.attr('data-max')) || false,
+                    minnum=$wrap.attr('data-min') || 1,
+                    initnum=$input.val() || minnum;
+                /*初始*/
+                $input.val(initnum);
+                checkIlegal();
+                function checkIlegal(){
+                    var value =parseInt($input.val());
+
+                    //
+                     if (maxnum&&value>maxnum) {
+                        $input.val(maxnum);
+                    }
+                    else if (value<minnum) {
+                        $input.val(minnum);
+                    }
+                    if(value<=minnum){
+                        $minus.addClass(disClass);
+                    }else{
+                        $minus.removeClass(disClass);
+                    }
+                    if (value>=maxnum) {
+                        $plus.addClass(disClass);
+                    }else {
+                        $plus.removeClass(disClass);
+                    }
+
+                }
+                function checknull() {
+                    var value =$input.val();
+                    if(value === "" || value === "0"){
+                        $input.val(minnum);
+                    }
+                }
+                $input.keyup(function(evt){
+                    var value = $(this).val();
+                    var newvalue = value.replace(/[^\d]/g,"");
+                    $(this).val(newvalue);
+                    checknull();
+                });
+                $input.blur(function(){
+                    checknull();
+                    checkIlegal();
+                })
+
+                $minus.click(function(){
+                    minus();
+                     checkIlegal();
+                });
+
+                $plus.click(function(){
+                    add();
+                    checkIlegal();
+                });
+
+                function add () {
+                    var value = $input.val();
+                    var plus = parseInt(value)+1;
+                    $input.val(plus);
+                }
+                function minus () {
+                    var value = parseInt($input.val());
+                    var minus = value-1;
+                    $input.val(minus);
+                }
+            });
+        }
+        $.fn.goodsCount = goodsCount;
+</script>
+
+<script >
+    $(function () {
+
+        +function () {
+            var index=0,
+            bsrc='',
+            timer=null,
+            box=$('.detail-show'),
+            origin=$('.origin-show'),
+            bigimg=box.find('.big-pic'),
+            tumb=box.find('.thumb-show'),
+            tumbItem=tumb.find('.item'),
+            zoomup=box.find('.zoomup'),
+            zoomshow=box.find('.zoom-show');
+
+            /*图片切换*/
+            tumbItem.on('mouseenter',function () {
+                index=$(this).index();
+                clearTimeout(timer);
+                timer=setTimeout(function (){
+                    update(index);
+                }, 300)
+
+            });
+
+            function update (index) {
+                bsrc=tumbItem.eq(index).find('.s-pic').attr('bsrc');
+                bigimg.attr('src', bsrc);
+                tumbItem.find('.s-pic').removeClass('active').end().eq(index).find('.s-pic').addClass('active');
+            }
+
+            update(index);
+
+            if ($('.detail-show .thumb-show .item').length>5) {
+                $('.detail-show .thumb-show').slick({
+                    slidesToShow: 5,
+                    infinite:false
+                });
+            }
+
+            /*放大镜*/
+            origin.on('mouseover mouseout',function (e) {
+                if (e.type=="mouseover") {
+                    var oX=$(this).offset().left,
+                    oY=$(this).offset().top,
+                    zX=e.pageX,
+                    zY=e.pageY,
+                    pW=$(this).outerWidth(),
+                    pH=$(this).outerHeight(),
+                    zW=zoomup.outerWidth(),
+                    zH=zoomup.outerHeight(),
+                    scale=pW/zW,
+                    zsW=zoomshow.width()*scale,//放大后的宽度
+                    factor=zsW/pW
+
+                    zoomshow.find('img').attr('src',bigimg.attr('src')).width(zsW);
+
+                    $(document).on('mousemove.zoom',function (e) {
+                        zX=e.pageX-oX- zW/2;
+                        zY=e.pageY-oY- zH/2;
+                        move();
+                    });
+
+                    function move () {
+                        zX=zX<=0?0:zX;
+                        zX=zX>=pW-zW?pW-zW:zX;
+                        zY=zY<=0?0:zY;
+                        zY=zY>=pH-zH?pH-zH:zY;
+                        zoomup.show().css({top:zY,left:zX});
+                        zoomshow.show().find('img').css({top:-zY*factor,left:-zX*factor});
+                    }
+                }
+                else {
+                    $(document).off('mousemove.zoom');
+                     zoomup.hide()
+                     zoomshow.hide();
+                }
+            });
+        }();
+
+        $('.mod-numbox').goodsCount(); //数量加减
+
+        $('.detail-main').zTab({
+            tabnav:'.detail-tabs',
+            trigger:'click'
+        });
+    });
+  
+	/*]]>*/
+    </script>
+    <script type="text/javascript">
+
+function buy(){
+	
+					layer.msg("商品已下架", function(){
+						//关闭后的操作
+					});
+				
+ }
+ 
+    </script>
+</html>
